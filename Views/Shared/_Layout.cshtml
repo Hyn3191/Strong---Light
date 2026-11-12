@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8" />
+
+    <title>Strong & Light - @ViewBag.Title</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1" />
+
+    @Styles.Render("~/Content/css")
+
+    <link href="~/Content/Site.css"
+          rel="stylesheet" />
+
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <a href="@Url.Action("Index", "Home")"
+           class="logo">
+            STRONG & LIGHT
+        </a>
+
+        <div class="nav-links">
+
+            @Html.ActionLink("Home", "Index", "Home")
+
+            @Html.ActionLink("About", "About", "Home")
+
+            @Html.ActionLink("Contact", "Contact", "Home")
+
+            @Html.ActionLink("Shop", "Index", "Shop")
+
+            @if (Session["User"] != null)
+            {
+                <span class="welcome-user">
+                    Hello, @Session["User"]
+                </span>
+
+                @Html.ActionLink("Logout", "Logout", "Account")
+            }
+            else
+            {
+                @Html.ActionLink("Login", "Login", "Account")
+
+                @Html.ActionLink("Register", "Register", "Account")
+            }
+
+        </div>
+
+    </nav>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer>
+
+        <p>
+            ©Strong & Light.
+            Grade 12 - Silver/TechPro.
+        </p>
+
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+
+    @Scripts.Render("~/bundles/bootstrap")
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

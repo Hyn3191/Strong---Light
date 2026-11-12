@@ -1,0 +1,212 @@
+﻿@model IEnumerable<S_L.Models.CartItem>
+
+@{
+    ViewBag.Title = "Shopping Cart";
+
+    decimal total = Model.Sum(x => x.Subtotal);
+}
+
+<div class="cart-container">
+
+    <h1>My Shopping Cart</h1>
+    <p>Review your selected fragrances.</p>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="cart-message">
+            @TempData["Message"]
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <table class="cart-table">
+
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ProductName</td>
+
+                        <td>₱@item.Price.ToString("N2")</td>
+
+                        <td>
+                            @using (Html.BeginForm("Update", "Cart",
+                                FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                @Html.Hidden("id", item.ProductId)
+
+                                <input type="number"
+                                       name="quantity"
+                                       value="@item.Quantity"
+                                       min="1"
+                                       class="quantity-input" />
+
+                                <button type="submit" class="update-button">
+                                    Update
+                                </button>
+                            }
+                        </td>
+
+                        <td>₱@item.Subtotal.ToString("N2")</td>
+
+                        <td>
+                            @using (Html.BeginForm("Remove", "Cart",
+                                FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                @Html.Hidden("id", item.ProductId)
+
+                                <button type="submit" class="remove-button">
+                                    Remove
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+        <div class="cart-total">
+            <h2>Total: ₱@total.ToString("N2")</h2>
+
+            <a href="@Url.Action("Index", "Shop")"
+               class="continue-button">
+                Continue Shopping
+            </a>
+
+            <a href="@Url.Action("Index", "Checkout")"
+               class="checkout-button">
+                Proceed to Checkout
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="empty-cart">
+            <h2>Your cart is empty.</h2>
+
+            <p>Discover your favorite fragrance today.</p>
+
+            <a href="@Url.Action("Index", "Shop")">
+                Browse Products
+            </a>
+        </div>
+    }
+
+</div>
+
+<style>
+    .cart-container {
+        max-width: 1100px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+
+        .cart-container h1 {
+            font-size: 32px;
+        }
+
+    .cart-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+    }
+
+        .cart-table th,
+        .cart-table td {
+            padding: 18px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .cart-table th {
+            background: #171717;
+            color: white;
+        }
+
+    .quantity-input {
+        width: 55px;
+        padding: 7px;
+    }
+
+    .update-button,
+    .remove-button {
+        padding: 7px 12px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .update-button {
+        background: #a87932;
+        color: white;
+    }
+
+    .remove-button {
+        background: #b52b2b;
+        color: white;
+    }
+
+    .cart-total {
+        text-align: right;
+        margin-top: 30px;
+    }
+
+        .cart-total h2 {
+            margin-bottom: 25px;
+        }
+
+    .continue-button,
+    .checkout-button {
+        display: inline-block;
+        padding: 12px 20px;
+        margin: 5px;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+    .continue-button {
+        background: #ddd;
+        color: black;
+    }
+
+    .checkout-button {
+        background: #171717;
+        color: white;
+    }
+
+    .empty-cart {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+        .empty-cart a {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #171717;
+            color: white;
+            text-decoration: none;
+        }
+
+    .cart-message {
+        padding: 12px;
+        background: #fff3cd;
+        margin: 15px 0;
+    }
+</style>

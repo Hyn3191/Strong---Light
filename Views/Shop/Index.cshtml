@@ -1,0 +1,191 @@
+﻿@model IEnumerable<S_L.Models.Product>
+
+@{
+    ViewBag.Title = "Shop";
+}
+
+<div class="shop-header">
+    <h1>Our Fragrances</h1>
+    <p>Discover your signature scent with Strong & Light.</p>
+</div>
+
+<div class="shop-container">
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="product-grid">
+
+            @foreach (var product in Model)
+            {
+                <div class="product-card">
+
+                    <div class="product-image">
+                        @if (!String.IsNullOrEmpty(product.Image))
+                        {
+                            <img src="@Url.Content(product.Image)"
+                                 alt="@product.ProductName"
+                                 onerror="this.style.display='none';" />
+                        }
+                    </div>
+
+                    <div class="product-information">
+
+                        <span class="product-category">
+                            @product.Category
+                        </span>
+
+                        <h3>@product.ProductName</h3>
+
+                        <p class="product-price">
+                            ₱@product.Price.ToString("N2")
+                        </p>
+
+                        <p class="product-rating">
+                            @if (product.ReviewCount > 0)
+                            {
+                                <span>★ @product.AverageRating.ToString("0.0")</span>
+                                <span>(@product.ReviewCount reviews)</span>
+                            }
+                            else
+                            {
+                                <span>No reviews yet</span>
+                            }
+                        </p>
+
+                        <p class="product-stock">
+                            @(product.Stock > 0
+                                ? "In Stock: " + product.Stock
+                                : "Out of Stock")
+                        </p>
+
+                        <a href="@Url.Action("Details", "Shop",
+                            new { id = product.ProductID })"
+                           class="view-product-button">
+                            View Details
+                        </a>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="empty-products">
+            <h2>No Products Available</h2>
+            <p>Please check again later.</p>
+        </div>
+    }
+
+</div>
+
+<style>
+    .shop-header {
+        text-align: center;
+        padding: 55px 20px;
+        background: #171717;
+        color: white;
+    }
+
+        .shop-header h1 {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .shop-header p {
+            color: #cccccc;
+        }
+
+    .shop-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 25px;
+    }
+
+    .product-card {
+        background: white;
+        border: 1px solid #eeeeee;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: 0.3s;
+    }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+        }
+
+    .product-image {
+        height: 230px;
+        background: #f2f2f2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .product-information {
+        padding: 20px;
+    }
+
+    .product-category {
+        color: #999;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+
+    .product-information h3 {
+        margin: 10px 0;
+        font-size: 20px;
+    }
+
+    .product-price {
+        font-size: 21px;
+        font-weight: bold;
+        color: #a87932;
+    }
+
+    .product-rating {
+        color: #d49b35;
+    }
+
+    .product-stock {
+        font-size: 13px;
+        color: #666;
+    }
+
+    .view-product-button {
+        display: block;
+        text-align: center;
+        background: #171717;
+        color: white;
+        padding: 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        margin-top: 15px;
+    }
+
+        .view-product-button:hover {
+            background: #a87932;
+            color: white;
+            text-decoration: none;
+        }
+
+    .empty-products {
+        text-align: center;
+        padding: 60px;
+    }
+</style>
